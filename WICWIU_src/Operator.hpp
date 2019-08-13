@@ -645,7 +645,7 @@ template<typename DTYPE> Container<Operator<DTYPE> *> *Operator<DTYPE>::GetInput
 }
 
 template<typename DTYPE> Tensor<DTYPE> *Operator<DTYPE>::GetResult() const {
-    return (*m_aaResult)[0];
+    return (*m_aaResult)[0];   // [ct, ht, .....]
 }
 
 template<typename DTYPE> Container<Tensor<DTYPE> *> *Operator<DTYPE>::GetResultContainer() {

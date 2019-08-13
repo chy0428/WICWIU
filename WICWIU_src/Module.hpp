@@ -3,6 +3,9 @@
 
 #include "Operator_utils.hpp"
 
+
+
+
 /*!
  * @class Module Operator들을 그래프로 구성해 모듈화하는 클래스
  * @details Operator들을 뉴럴 네트워크의 서브 그래프로 구성해 단일 Operator로서 할 수 없는 기능들을 수행하게 한다
@@ -291,8 +294,8 @@ template<typename DTYPE> Operator<DTYPE> *Module<DTYPE>::AnalyzeGraph(Operator<D
     while (queue.GetSize() > 0) {
         out = queue.Pop();
 
-        if (!(this->IsInput(out))) {
-            if (this->IsValid(out)) {
+        if (!(this->IsInput(out))) {  // input이 아니고
+            if (this->IsValid(out)) { // 중복되지 않아야
                 // std::cout << out->GetName() << '\n';
 
                 if (out->GetIsTensorholder()) {
@@ -441,6 +444,24 @@ template<typename DTYPE> int Module<DTYPE>::ForwardPropagate(int pTime) {
  * @return TRUE
  */
 template<typename DTYPE> int Module<DTYPE>::BackPropagate(int pTime) {
+
+  // 1T 만들기
+  int start_index = m_numOfExcutableOperator - 1;
+  int t_timesize    = (*m_aaExcutableOperator)[start_index]->GetResult()->GetTimeSize();
+  int t_batchsize   = (*m_aaExcutableOperator)[start_index]->GetResult()->GetBatchSize();
+  int t_channelsize = (*m_aaExcutableOperator)[start_index]->GetResult()->GetChannelSize();
+  int t_rowsize     = (*m_aaExcutableOperator)[start_index]->GetResult()->GetRowSize();
+  int t_colsize     = (*m_aaExcutableOperator)[start_index]->GetResult()->GetColSize();
+
+
+  Shape *Temp = new Shape(t_timesize, t_batchsize, t_channelsize, t_rowsize, t_colsize);
+  static Tensor<DTYPE> *Ones = new Tensor<DTYPE>(Temp);
+
+  Ones->SetOne();
+
+ (*m_aaExcutableOperator)[start_index]->SetGradient(Ones);
+
+  //  m_aaExcutableOperator[m_numOfExcutableOperator - 1] -> SetGradient(1T);
     for (int i = m_numOfExcutableOperator - 1; i >= 0; i--) {
         (*m_aaExcutableOperator)[i]->BackPropagate(pTime);
     }
@@ -628,6 +649,9 @@ template<typename DTYPE> void Module<DTYPE>::SetDeviceGPUOnModule(cudnnHandle_t&
  */
 template<typename DTYPE> int Module<DTYPE>::ForwardPropagateOnGPU(int pTime) {
     for (int i = 0; i < m_numOfExcutableOperator; i++) {
+        std::cout << i<<'\n';
+        std::cout <<"numofexcu : "<< m_numOfExcutableOperator<<'\n';
+        std::cout << (*m_aaExcutableOperator)[i]<<'\n';
         (*m_aaExcutableOperator)[i]->ForwardPropagateOnGPU(pTime);
     }
     return TRUE;

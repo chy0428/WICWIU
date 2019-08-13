@@ -9,6 +9,8 @@
  */
 template<typename DTYPE> class NeuralNetwork : public Module<DTYPE>{
 private:
+
+    // 오상진
     LossFunction<DTYPE> *m_aLossFunction;
     ///< 신경망의 손실함수에 해당하는 LossFunction의 포인터 멤버 변수
     Optimizer<DTYPE> *m_aOptimizer;
@@ -191,6 +193,8 @@ template<typename DTYPE> NeuralNetwork<DTYPE>::~NeuralNetwork() {
  * @param pLossFunction 신경망의 Loss Function로 지정하고자 하는 Loss Function
  * @return 매개변수로 받은 Loss Function
  */
+ // 오상진  template<typename DTYPE> LossFunction<DTYPE> *NeuralNetwork<DTYPE>::SetLossFunction(LossFunction<DTYPE> *pLossFunction) {
+
 template<typename DTYPE> LossFunction<DTYPE> *NeuralNetwork<DTYPE>::SetLossFunction(LossFunction<DTYPE> *pLossFunction) {
     m_aLossFunction = pLossFunction;
     return pLossFunction;
@@ -276,17 +280,19 @@ template<typename DTYPE> int NeuralNetwork<DTYPE>::Test() {
  * @see NeuralNetwork<DTYPE>::ResetOperatorResult() NeuralNetwork<DTYPE>::ResetOperatorGradient() NeuralNetwork<DTYPE>::ResetLossFunctionResult() NeuralNetwork<DTYPE>::ResetLossFunctionGradient()
  * @see NeuralNetwork<DTYPE>::ForwardPropagate() NeuralNetwork<DTYPE>::BackPropagate() Optimizer<DTYPE>::UpdateParameter()
  */
+
+ //오상진
 template<typename DTYPE> int NeuralNetwork<DTYPE>::TrainOnCPU() {
     // this->ResetOperatorResult();
     // this->ResetOperatorGradient();
     this->ResetResult();
     this->ResetGradient();
-    this->ResetLossFunctionResult();
-    this->ResetLossFunctionGradient();
+    //this->ResetLossFunctionResult();
+    //this->ResetLossFunctionGradient();
 
     this->ForwardPropagate();
-    m_aLossFunction->ForwardPropagate();
-    m_aLossFunction->BackPropagate();
+    // m_aLossFunction->ForwardPropagate();
+    // m_aLossFunction->BackPropagate();
     this->BackPropagate();
 
     m_aOptimizer->UpdateParameter();
@@ -326,12 +332,12 @@ template<typename DTYPE> int NeuralNetwork<DTYPE>::TrainOnGPU() {
     // this->ResetOperatorGradient();
     this->ResetResult();
     this->ResetGradient();
-    this->ResetLossFunctionResult();
-    this->ResetLossFunctionGradient();
+    //this->ResetLossFunctionResult();
+    //this->ResetLossFunctionGradient();
 
     this->ForwardPropagateOnGPU();
-    m_aLossFunction->ForwardPropagateOnGPU();
-    m_aLossFunction->BackPropagateOnGPU();
+    //m_aLossFunction->ForwardPropagateOnGPU();
+    //m_aLossFunction->BackPropagateOnGPU();
     this->BackPropagateOnGPU();
 
     m_aOptimizer->UpdateParameterOnGPU();

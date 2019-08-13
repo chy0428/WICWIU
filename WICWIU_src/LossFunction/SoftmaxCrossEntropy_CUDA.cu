@@ -22,7 +22,8 @@ __global__ void SoftmaxCrossEntropy_ForwardPropagate_kernel(int time, int batchs
     }
 }
 
-template<typename DTYPE> Tensor<DTYPE> *SoftmaxCrossEntropy<DTYPE>::ForwardPropagateOnGPU(int pTime) {
+// Tensor<DTYPE> *
+template<typename DTYPE> int SoftmaxCrossEntropy<DTYPE>::ForwardPropagateOnGPU(int pTime) {
     Tensor<DTYPE> *input         = this->GetTensor();
     Tensor<DTYPE> *label         = this->GetLabel()->GetResult();
     Tensor<DTYPE> *softmaxresult = m_aSoftmaxResult;
@@ -52,7 +53,8 @@ template<typename DTYPE> Tensor<DTYPE> *SoftmaxCrossEntropy<DTYPE>::ForwardPropa
 
     SoftmaxCrossEntropy_ForwardPropagate_kernel << < noBlock, threadsPerBlock >> > (pTime, batchsize, colsize, m_epsilon, pDevResult, pDevLabel, pDevSoftMax);
 
-    return result;
+    return 0;
+    // return result;
 }
 
 __global__ void SoftmaxCrossEntropy_BackPropagate_kernel(int time, int capacity, float *input_delta, float *label, float *softmaxresult) {
@@ -65,7 +67,8 @@ __global__ void SoftmaxCrossEntropy_BackPropagate_kernel(int time, int capacity,
     }
 }
 
-template<typename DTYPE> Tensor<DTYPE> *SoftmaxCrossEntropy<DTYPE>::BackPropagateOnGPU(int pTime) {
+// Tensor<DTYPE> *
+template<typename DTYPE> int SoftmaxCrossEntropy<DTYPE>::BackPropagateOnGPU(int pTime) {
     Tensor<DTYPE> *label         = this->GetLabel()->GetResult();
     Tensor<DTYPE> *softmaxresult = m_aSoftmaxResult;
     Tensor<DTYPE> *input_delta   = this->GetOperator()->GetDelta();
@@ -83,7 +86,8 @@ template<typename DTYPE> Tensor<DTYPE> *SoftmaxCrossEntropy<DTYPE>::BackPropagat
 
     SoftmaxCrossEntropy_BackPropagate_kernel << < noBlock, threadsPerBlock >> > (pTime, capacity, pDevInputDelta, pDevLabel, pDevSoftMax);
 
-    return NULL;
+    return 0;
+    //  return NULL;
 }
 
 #endif  // ifdef __CUDNN__

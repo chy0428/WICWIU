@@ -156,7 +156,7 @@ public:
     @param pTime 입력 Tensor의 Time 축의 Dimension
     @return LossFunction의 입력 Operator에 대한 Softmax Cross Entropy
     */
-    Tensor<DTYPE>* ForwardPropagate(int pTime = 0) {
+    int ForwardPropagate(int pTime = 0) {
         Tensor<DTYPE> *input         = this->GetTensor();
         Tensor<DTYPE> *label         = this->GetLabel()->GetResult();
         Tensor<DTYPE> *softmaxresult = m_aSoftmaxResult;
@@ -211,7 +211,7 @@ public:
             }
         }
 
-        return result;
+        return 0;
     }
 
     /*!
@@ -220,7 +220,7 @@ public:
     @param pTime 입력 Tensor의 Time 축의 Dimension
     @return NULL
     */
-    Tensor<DTYPE>* BackPropagate(int pTime = 0) {
+    int BackPropagate(int pTime = 0) {
         Tensor<DTYPE> *label         = this->GetLabel()->GetResult();
         Tensor<DTYPE> *softmaxresult = m_aSoftmaxResult;
 
@@ -245,12 +245,12 @@ public:
             }
         }
 
-        return NULL;
+        return 0;
     }
 
 #ifdef __CUDNN__
 
-    Tensor<DTYPE>* ForwardPropagateOnGPU(int pTime = 0);
+    int ForwardPropagateOnGPU(int pTime = 0);
     // {
     // Tensor<DTYPE> *input         = this->GetTensor();
     // Tensor<DTYPE> *label         = this->GetLabel()->GetResult();
@@ -288,7 +288,7 @@ public:
     // return result;
     // }
 
-    Tensor<DTYPE>* BackPropagateOnGPU(int pTime = 0);
+    int BackPropagateOnGPU(int pTime = 0);
     // {
     // return this->BackPropagate(pTime);
     // }

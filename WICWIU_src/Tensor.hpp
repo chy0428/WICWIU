@@ -82,6 +82,13 @@ public:
     int                      Load(FILE *fp);
 
     void                     Clip(float min, float max);
+
+    //오상진 추가
+
+    void SetOne();
+
+
+
 #ifdef __CUDNN__
     void                     SetDeviceGPU(unsigned int idOfDevice);
 
@@ -103,9 +110,16 @@ public:
 
     static Tensor<DTYPE>* Zeros(int pSize0, int pSize1, int pSize2, int pSize3, int pSize4, IsUseTime pAnswer = UseTime);
     static Tensor<DTYPE>* Zeros(Shape *pShape, IsUseTime pAnswer = UseTime);
+    // static Tensor<DTYPE>* Ones(Shape *pShape, IsUseTime)
     static Tensor<DTYPE>* Constants(int pSize0, int pSize1, int pSize2, int pSize3, int pSize4, DTYPE constant, IsUseTime pAnswer = UseTime);
     static Tensor<DTYPE>* Constants(Shape *pShape, DTYPE constant, IsUseTime pAnswer = UseTime);
 };
+
+//오상진 추가
+template<typename DTYPE> void Tensor<DTYPE>::SetOne(){
+  m_aLongArray->SetOne();
+}
+
 
 //////////////////////////////////////////////////////////////////////////////// for private method
 

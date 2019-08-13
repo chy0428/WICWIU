@@ -11,6 +11,7 @@
 #define GPUID             1
 
 int main(int argc, char const *argv[]) {
+
     clock_t startTime, endTime;
     double  nProcessExcuteTime;
     char filename[]      = "MNIST_parmas";

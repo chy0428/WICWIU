@@ -58,6 +58,10 @@ public:
     int    GetDeviceID();
     DTYPE* GetCPULongArray(unsigned int pTime = 0);
 
+    // 오상진 추가
+    DTYPE**GetHost();
+    void SetOne();
+
     int    SetDeviceCPU();
 
     int    Save(FILE *fp);
@@ -582,6 +586,23 @@ template<typename DTYPE> int LongArray<DTYPE>::SetDeviceGPU(unsigned int idOfDev
 
     return TRUE;
 }
+
+// 오상진 추가
+
+template<typename DTYPE> void LongArray<DTYPE>::SetOne(){
+  for (int i = 0; i < m_TimeSize; i++) {
+      for (int j = 0; j < m_CapacityPerTime; j++) {
+          m_aaHostLongArray[i][j] = 1.f;
+      }
+  }
+}
+
+// template<typename DTYPE> int LongArray<DTYPE>::GetCapacityPerTime(){
+//   return m_CapacityPerTime;
+// }
+
+
+
 
 /*!
 @brief m_aaDevLongArray중 pTime에 있는 LongArray를 반환하는 메소드.

@@ -121,7 +121,7 @@ public:
     @param timeIdx Time 축의 인덱스, 미지정 시 0으로 초기화
     @return 뉴럴 네트워크 결과 값에 대한 Hinge Loss
     */
-    Tensor<DTYPE>* ForwardPropagate(int timeIdx = 0) {
+    int ForwardPropagate(int timeIdx = 0) {
         Tensor<DTYPE> *input   = this->GetTensor();
         Tensor<DTYPE> *desired = this->GetLabel()->GetResult();
         Tensor<DTYPE> *result  = this->GetResult();
@@ -168,7 +168,7 @@ public:
             }
         }
 
-        return result;
+        return 0;
     }
 
     /*!
@@ -177,7 +177,7 @@ public:
     @param pTIme Time 축의 인덱스, 미지정 시 0으로 초기화
     @return NULL
     */
-    Tensor<DTYPE>* BackPropagate(int pTime = 0) {
+    int BackPropagate(int pTime = 0) {
         Tensor<DTYPE> *input       = this->GetTensor();
         Tensor<DTYPE> *label       = this->GetLabel()->GetResult();
         Tensor<DTYPE> *input_delta = this->GetOperator()->GetDelta();
@@ -204,7 +204,7 @@ public:
         }
 
 
-        return NULL;
+        return 0;
     }
 
 #ifdef __CUDNN__
@@ -215,9 +215,9 @@ public:
     @return NULL
     @see Tensor<DTYPE>HingeLoss::ForwardPropagate(int timeIdx = 0)
     */
-    Tensor<DTYPE>* ForwardPropagateOnGPU(int pTime = 0) {
+    int ForwardPropagateOnGPU(int pTime = 0) {
         this->ForwardPropagate();
-        return NULL;
+        return 0;
     }
 
     /*!
@@ -226,9 +226,9 @@ public:
     @return NULL
     @see Tensor<DTYPE>HingeLoss::BackPropagate(int pTime = 0)
     */
-    Tensor<DTYPE>* BackPropagateOnGPU(int pTime = 0) {
+    int BackPropagateOnGPU(int pTime = 0) {
         this->BackPropagate();
-        return NULL;
+        return 0;
     }
 
 #endif  // __CUDNN__
