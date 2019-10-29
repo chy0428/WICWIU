@@ -26,7 +26,7 @@ public:
 
           // ======================= RNN Layer ========================= //
           out = new RecurrentLayer<float>(out, ptime, 10, 3, 3, 1, 1, 0, FALSE, "Conv_1");
-          out = new Tanh<float>(hidden, "Tanh");
+          
 
           // ======================= Affine Layer ======================= f(Wx+b) 형태로 output을 내는 것.
           out = new ReShape<float>(out, 1, 1, 5 * 5 * 20, "Image2Flat");

@@ -54,8 +54,9 @@ public:
         for(int i = 0; i < batch_size; i++){
           for(int j = 1; j < ptime; j++){
               out1.push_back(new MatMul<DTYPE>(pWeight_h, hidden[j-1]));
-              out2.push_back(new MatMul<DTYPE>(pWeight_x, hidden[j]));
+              out2.push_back(new MatMul<DTYPE>(pWeight_x, pInput[j]));
               hidden.push_back(new AddChannelWise<DTYPE>(out1, out2));
+              hidden[j] = new Tanh<float>(hidden, "Tanh");
               this->AnalyzeGraph(hidden[j]);
           }
         }
