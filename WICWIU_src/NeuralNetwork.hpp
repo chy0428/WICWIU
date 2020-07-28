@@ -455,17 +455,17 @@ template<typename DTYPE> float NeuralNetwork<DTYPE>::GetTop5Accuracy(int numOfCl
     for (int ba = 0; ba < batchsize; ba++) {
         for (int ti = 0; ti < timesize; ti++) {
             int pred_index[5] = { 0, };  // for Initialize
-            int ans_index     = 0;
-
-            GetTop5Index(pred, pred_index, ba, ti, numOfClass);
-            ans_index = GetMaxIndex(ans, ba, ti, numOfClass);
+            int ans_index     = 0;    
             // printf("%d, ", ans_index);
 
             // pred_index[5] (top5Index) 중 하나라도 레이블과 같은 경우, 1을 더하고 break
             for (int i = 0; i < 5; i++) {
-                // printf("pred_index[%d] = %d, ans_Index = %d\n", i, pred_index[i], ans_index);
+                GetTop5Index(pred, pred_index, ba, ti, numOfClass);
+                ans_index = GetMaxIndex(ans, ba, ti, numOfClass);
+                //printf("pred_index[%d] = %d, ans_Index[%d] = %d\n", i, pred_index[i], i, ans_index);
                 if (pred_index[i] == ans_index) {
                     top5Accuracy += 1.f;
+                    //printf("top5Accuracy = %f", top5Accuracy);
                 }
             }
         }
@@ -661,7 +661,7 @@ template<typename DTYPE> void NeuralNetwork<DTYPE>::InputToFeature(int inDim, in
 #ifdef __CUDNN__
         this->ForwardPropagateOnGPU();
 #else   //  __CUDNN__
-        this->ForwardPropagateOn():
+        this->ForwardPropagate();
 #endif  //  __CUDNN__
 
         Tensor<float> *result = this->GetResult();
